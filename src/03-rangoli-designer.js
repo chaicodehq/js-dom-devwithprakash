@@ -71,24 +71,104 @@
  */
 export function addColors(element, ...colors) {
   // Your code here
+
+  if (!element) {
+    return -1;
+  }
+
+  let numberofClasses = 0;
+
+  colors.forEach((item) => {
+    if (!element.classList.contains(item)) {
+      element.classList.add(item);
+      numberofClasses += 1;
+    }
+  });
+
+  return numberofClasses;
 }
 
 export function removeColors(element, ...colors) {
   // Your code here
+
+  if (!element || element === undefined) {
+    return -1;
+  }
+
+  let removedClasses = 0;
+
+  colors.forEach((item) => {
+    if (element.classList.contains(item)) {
+      element.classList.remove(item);
+      removedClasses += 1;
+    }
+  });
+
+  return removedClasses;
 }
 
 export function togglePattern(element, pattern) {
   // Your code here
+
+  if (!element || element === undefined) {
+    return null;
+  }
+
+  element.classList.toggle(`pattern-${pattern}`);
+
+  if (element.classList.contains(`pattern-${pattern}`)) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 export function hasDesign(element, designName) {
   // Your code here
+
+  if (!element || element === undefined) {
+    return false;
+  }
+
+  if (element.classList.contains(`design-${designName}`)) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 export function replaceDesign(element, oldDesign, newDesign) {
   // Your code here
+
+  if (!element || element === undefined) {
+    return false;
+  }
+
+  if (element.classList.contains(`design-${oldDesign}`)) {
+    element.className = `design-${newDesign}`;
+
+    return true;
+  } else {
+    element.className = `design-${newDesign}`;
+    return false;
+  }
 }
 
 export function getActiveColors(element) {
   // Your code here
+
+  if (!element || element === undefined) {
+    return [];
+  }
+
+  const classArr = element.classList;
+
+  let colors = [];
+  classArr.forEach((item) => {
+    if (item.startsWith("color")) {
+      colors.push(item.split("-")[1]);
+    }
+  });
+
+  return colors;
 }

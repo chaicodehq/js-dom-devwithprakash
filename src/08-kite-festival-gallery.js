@@ -80,20 +80,143 @@
  */
 export function renderKiteCard(kite) {
   // Your code here
+
+  if (
+    !kite ||
+    !kite.name ||
+    !kite.color ||
+    !kite.size ||
+    !kite.maker ||
+    !kite.image
+  ) {
+    return null;
+  }
+
+  const container = document.createElement("div");
+  const img = document.createElement("img");
+  const h3 = document.createElement("h3");
+  const para1 = document.createElement("p");
+  const para2 = document.createElement("p");
+
+  container.className = "kite-card";
+  h3.className = "kite-name";
+  para1.className = "kite-maker";
+  para2.className = "kite-info";
+
+  img.src = kite.image;
+  img.alt = kite.name;
+
+  h3.textContent = kite.name;
+  para1.textContent = `by ${kite.maker}`;
+  para2.textContent = `${kite.size} - ${kite.color}`;
+
+  container.appendChild(img);
+  container.appendChild(h3);
+  container.appendChild(para1);
+  container.appendChild(para2);
+
+  return container;
+
+  container.className = "kite-card";
 }
 
 export function renderGallery(container, kites) {
   // Your code here
+
+  if (!container) {
+    return -1;
+  }
+
+  if (!kites || !Array.isArray(kites)) {
+    return -1;
+  }
+
+  container.innerHTML = null;
+
+  let numberofKites = 0;
+
+  for (const kite of kites) {
+    const result = renderKiteCard(kite);
+
+    if (result) {
+      numberofKites += 1;
+      container.appendChild(result);
+    }
+  }
+
+  return numberofKites;
 }
 
 export function filterKites(container, kites, filterFn) {
   // Your code here
+  if (!container) {
+    return -1;
+  }
+  if (!Array.isArray(kites) || typeof filterFn !== "function") {
+    return -1;
+  }
+
+  const filtered = kites.filter(filterFn);
+
+  container.innerHTML = "";
+
+  filtered.forEach((kite) => {
+    const div = document.createElement("div");
+    container.appendChild(div);
+  });
+
+  return filtered.length;
 }
 
 export function sortAndRender(container, kites, sortField, order) {
   // Your code here
+
+  if (!container || !Array.isArray(kites)) {
+    return [];
+  }
+
+  const copyKites = [...kites];
+
+  const newOrder = order === "desc" ? -1 : 1;
+
+  copyKites.sort((a, b) => {
+    const valA = a[sortField] ?? "";
+    const valB = b[sortField] ?? "";
+
+    if (typeof valA === "number" && typeof valB === "number") {
+      return (valA - valB) * newOrder;
+    }
+
+    return String(valA).localeCompare(String(valB)) * newOrder;
+  });
+
+  container.innerHTML = "";
+
+  copyKites.forEach((kite) => {
+    const div = document.createElement("div");
+    div.textContent = kite.name;
+    container.appendChild(div);
+  });
+
+  return copyKites;
 }
 
 export function renderEmptyState(container, message) {
   // Your code here
+
+  if (!container) {
+    return false;
+  }
+
+  if (container.children.length === 0) {
+    const p = document.createElement("p");
+    p.className = "empty-state";
+    p.textContent = message;
+    container.appendChild(p);
+    return true;
+  }
+
+  if(container.children.length > 0){
+    return false
+  }
 }

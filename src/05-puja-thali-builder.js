@@ -59,16 +59,143 @@
  */
 export function setupAddButton(button, thaliElement, itemName) {
   // Your code here
+  if (!button || button === undefined) {
+    return null;
+  }
+
+  if (!thaliElement || thaliElement === undefined) {
+    return null;
+  }
+
+  if (!itemName || itemName === undefined) {
+    return null;
+  }
+
+  function handleClick() {
+    const li = document.createElement("li");
+
+    li.textContent = itemName;
+
+    thaliElement.appendChild(li);
+  }
+
+  button.addEventListener("click", handleClick);
+
+  return function removeEvent() {
+    button.removeEventListener("click", handleClick);
+  };
 }
 
 export function setupRemoveButton(button, thaliElement) {
   // Your code here
+
+  if (!button || button === undefined) {
+    return null;
+  }
+
+  if (!thaliElement || thaliElement === undefined) {
+    return null;
+  }
+
+  function handleClick() {
+    if (thaliElement.lastElementChild) {
+      thaliElement.lastElementChild.remove();
+    }
+  }
+
+  button.addEventListener("click", handleClick);
+
+  return function cleanUp() {
+    button.removeEventListener("click", handleClick);
+  };
 }
 
 export function setupToggleItem(button, thaliElement, itemName) {
   // Your code here
+
+  if (!button || !thaliElement || !itemName) {
+    return null;
+  }
+
+  function handleClick() {
+    const elements = Array.from(thaliElement.children);
+
+    const exists = elements.find((li) => li.textContent === itemName);
+
+    if (exists) {
+      thaliElement.removeChild(exists);
+    } else {
+      const li = document.createElement("li");
+
+      li.textContent = itemName;
+
+      thaliElement.appendChild(li);
+    }
+  }
+
+  button.addEventListener("click", handleClick);
+
+  return function removeEvent() {
+    button.removeEventListener("click", handleClick);
+  };
 }
 
 export function createThaliManager(thaliElement, counterElement) {
   // Your code here
+
+  if (!thaliElement || !counterElement) {
+    return null;
+  }
+
+  function addItem(name) {
+    const li = document.createElement("li");
+
+    li.textContent = name;
+
+    thaliElement.appendChild(li);
+
+    const element = thaliElement.querySelectorAll("*");
+
+    counterElement.textContent = element.length;
+
+    return li;
+  }
+
+  function removeItem(name) {
+    const elements = Array.from(thaliElement.getElementsByTagName("li"));
+
+    for (const item of elements) {
+      if (item.textContent === name) {
+        thaliElement.removeChild(item);
+        const element = Array.from(thaliElement.getElementsByTagName("li"));
+
+        counterElement.textContent = element.length;
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function getCount() {
+    const elements = thaliElement.querySelectorAll("*");
+
+    return elements.length;
+  }
+
+  function clear() {
+    while (thaliElement.firstChild) {
+      thaliElement.removeChild(thaliElement.firstChild);
+    }
+
+    counterElement.textContent = 0;
+  }
+
+  return {
+    addItem,
+    removeItem,
+    getCount,
+    clear,
+  };
 }

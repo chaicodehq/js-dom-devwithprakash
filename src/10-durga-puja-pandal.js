@@ -91,24 +91,147 @@
  */
 export function createPandalElement(pandal) {
   // Your code here
+
+  if (
+    !pandal ||
+    !pandal.name ||
+    !pandal.zone ||
+    !pandal.theme ||
+    !pandal.budget ||
+    !pandal.rating
+  ) {
+    return null;
+  }
+
+  if (
+    typeof pandal.name !== "string" ||
+    typeof pandal.zone !== "string" ||
+    typeof pandal.theme !== "string" ||
+    typeof pandal.budget !== "number" ||
+    typeof pandal.rating !== "number"
+  ) {
+    return null;
+  }
+
+  const pandalContainer = document.createElement("div");
+
+  pandalContainer.className = "pandal";
+
+  pandalContainer.dataset.name = pandal.name;
+  pandalContainer.dataset.zone = pandal.zone;
+  pandalContainer.dataset.theme = pandal.theme;
+  pandalContainer.dataset.budget = pandal.budget;
+  pandalContainer.dataset.rating = pandal.rating;
+
+  pandalContainer.textContent = pandal.name;
+
+  return pandalContainer;
 }
 
 export function getPandalInfo(element) {
   // Your code here
+
+  if (!element) {
+    return null;
+  }
+
+  const name = element.dataset.name;
+  const zone = element.dataset.zone;
+  const theme = element.dataset.theme;
+  const budget = Number(element.dataset.budget);
+  const rating = Number(element.dataset.rating);
+
+  return {
+    name,
+    zone,
+    theme,
+    budget,
+    rating,
+  };
 }
 
 export function updatePandalRating(element, newRating) {
   // Your code here
+
+  if (!element) {
+    return null;
+  }
+
+  if (typeof newRating !== "number" || newRating < 0 || newRating > 5) {
+    return null;
+  }
+
+  const oldRating = Number(element.dataset.rating);
+
+  element.dataset.rating = newRating;
+
+  return oldRating;
 }
 
 export function filterPandalsByZone(container, zone) {
   // Your code here
+
+  if (!container) {
+    return [];
+  }
+
+  if (!zone || typeof zone !== "string") {
+    return [];
+  }
+
+  const pandalChildren = container.querySelectorAll(".pandal");
+
+  let elArray = [];
+
+  for (const el of pandalChildren) {
+    if (el.dataset.zone === zone) {
+      elArray.push(el);
+    }
+  }
+
+  return elArray;
 }
 
 export function getPandalsByBudgetRange(container, min, max) {
   // Your code here
+
+  if (!container) {
+    return [];
+  }
+
+  if (typeof min !== "number" || typeof max !== "number") {
+    return [];
+  }
+
+  const childrenEl = container.querySelectorAll(".pandal");
+  const elArray = [];
+
+  for (const el of childrenEl) {
+    const budget = Number(el.dataset.budget);
+
+    if (budget >= min && budget <= max) {
+      elArray.push(el);
+    }
+  }
+
+  return elArray;
 }
 
 export function sortPandalsByRating(container) {
   // Your code here
+  if (!container) {
+    return [];
+  }
+
+  const childrenEl = Array.from(container.querySelectorAll(".pandal"));
+
+  childrenEl.sort(
+    (a, b) => Number(b.dataset.rating) - Number(a.dataset.rating),
+  );
+
+  for (const el of childrenEl) {
+    container.appendChild(el);
+  }
+
+  return childrenEl;
 }
